@@ -17,17 +17,29 @@ renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight ); 
 camera.position.setZ(30);
 
-const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 );
-const material = new THREE.MeshStandardMaterial( { color: 0xFF6347 } );
-const torus = new THREE.Mesh( geometry, material );
-const controls = new OrbitControls(camera, renderer.domElement);
+//const controls = new OrbitControls(camera, renderer.domElement);
 
-scene.add(torus)
+/*
+------------
+| GEOMETRY |
+------------
+*/
+
+//const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 );
+//const material = new THREE.MeshStandardMaterial( { color: 0xFF6347 } );
+//const torus = new THREE.Mesh( geometry, material );
+
+//scene.add(torus)
+const planeGeometry = new THREE.PlaneGeometry( 10, 3, 16 );
+const planeMaterial = new THREE.MeshStandardMaterial( { color: 0xFF6347, side: THREE.DoubleSide } );
+const plane = new THREE.Mesh( planeGeometry, planeMaterial)
+scene.add(plane)
 
 const pointLight = new THREE.PointLight(0xffffff)
 pointLight.position.set(0,0,0)
 const ambientLight = new THREE.AmbientLight(0xffffff)
 scene.add(pointLight, ambientLight)
+
 
 /*
 -----------
@@ -48,7 +60,7 @@ scene.add(gridHelper)
 | CUSTOM MODELS |
 -----------------
 */
-
+/*
 const loader = new GLTFLoader();
 const draco = new DRACOLoader();
 draco.setDecoderConfig({ type: 'js' });
@@ -66,7 +78,7 @@ loader.load('models/scene.gltf', function ( gltf ) {
 	function ( error ) {
 		console.log( 'An error happened' );
 	}
-);
+);*/
 
 /*
 -------------
@@ -89,9 +101,9 @@ Array(200).fill().forEach(addStar)
 function animate() {
   requestAnimationFrame( animate );
 
-  torus.rotation.x += 0.01;
+  //torus.rotation.x += 0.01;
 
-  controls.update();
+  //controls.update();
 
   renderer.render( scene, camera );
 }
