@@ -17,7 +17,7 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight ); 
-camera.position.setZ(30);
+camera.position.setZ(50);
 
 //const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -32,19 +32,29 @@ camera.position.setZ(30);
 //const torus = new THREE.Mesh( geometry, material );
 
 //scene.add(torus)
-const planeGeometry = new THREE.PlaneGeometry( 400, 400, 100, 100 );
+const planeGeometry = new THREE.PlaneGeometry( 400, 400, 50, 50 );
 const planeMaterial = new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, flatShading: THREE.FlatShading, vertexColors: true } );
 const planeMesh = new THREE.Mesh( planeGeometry, planeMaterial)
 scene.add(planeMesh)
 
+// vertice position randomization
 const {array} = planeMesh.geometry.attributes.position
-for (let i = 0; i < array.length; i += 3) {
-  const x = array[i]
-  const y = array[i + 1]
-  const z = array[i + 2]
-
-  array[i + 2] = z + Math.random()
+const randomValues = []
+for (let i = 0; i < array.length; i++) {
+  if (i % 3 === 0) {
+    const x = array[i]
+    const y = array[i + 1]
+    const z = array[i + 2]
+  
+    array[i] = x + (Math.random() - 0.5)
+    array[i + 1] = y + (Math.random() - 0.5)
+    array[i + 2] = z + (Math.random() - 0.5) *1.2
+  }
+  randomValues.push(Math.random() - 0.5)
 }
+
+planeMesh.geometry.attributes.position.randomValues = randomValues
+planeMesh.geometry.attributes.position.originalPosition = planeMesh.geometry.attributes.position.array
 
 const colors = []
 for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
@@ -126,6 +136,7 @@ addEventListener('mousemove', (event) => {
   mouse.y = -(event.clientY / innerHeight)*2+1
 })
 
+let frame = 0
 function animate() {
   requestAnimationFrame( animate );
 
@@ -135,6 +146,17 @@ function animate() {
 
   renderer.render( scene, camera );
   raycaster.setFromCamera(mouse, camera);
+
+  frame += 0.01
+  const { array, originalPosition, randomValues } = planeMesh.geometry.attributes.position
+  for (let i = 0; i < array.length; i+=3) {
+    // x
+    array[i] = originalPosition[i] + Math.cos(frame + randomValues[i]) * 0.003
+    //y
+    array[i + 1] = originalPosition[i + 1] + Math.sin(frame + randomValues[i + 1]) * 0.003
+  }
+  planeMesh.geometry.attributes.position.needsUpdate = true
+
   const intersects = raycaster.intersectObject(planeMesh)
   if (intersects.length > 0) {
     const { color } = intersects[0].object.geometry.attributes
