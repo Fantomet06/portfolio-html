@@ -5,12 +5,28 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
+
+    <style>
+      body {
+        margin: 0;
+      }
+    
+      .absolute {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        top: 0;
+        z-index: 100;
+      }
+    </style>
   </head>
   <body>
-
-    <canvas id="bg"></canvas>
-
-    <div id="app"></div>
+    <div id="bg">
+      <div class="absolute">
+        <a href="#" class="neon-button">Read More</a>
+      </div>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
